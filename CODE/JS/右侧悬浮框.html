@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #div1 {
+            width: 100px;
+            height: 150px;
+            background-color: red;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+    <script>
+        // 网页可见区域高：document.body.clientHeight
+
+        // 网页正文全文高：document.body.scrollHeight
+        // 网页可见区域高（包括边线的高）：document.body.offsetHeight
+        // 网页被卷去的高：document.body.scrollTop
+        // 屏幕分辨率高：window.screen.height
+        window.onscroll = function () {
+            var oDiv = document.getElementById('div1');
+            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            // oDiv.style.top = document.documentElement.clientHeight - oDiv.offsetHeight + scrollTop + 'px';
+            //解决闪动问题
+            startMove(parseInt((document.documentElement.clientHeight - oDiv.offsetHeight)/2 + scrollTop));
+        };
+
+        var timer = null;
+
+        function startMove(iTarget){
+            var oDiv=document.getElementById('div1');
+
+            clearInterval(timer)
+            timer=setInterval(function(){
+                var speed = (iTarget-oDiv.offsetTop)/2;
+                speed = speed>0?Math.ceil(speed):Math.floor(speed);
+
+                if(oDiv.offsetTop==iTarget){
+                    clearInterval(timer);
+                }else{
+                    oDiv.style.top=oDiv.offsetTop+speed+'px';
+                }
+            })
+        }
+
+    </script>
+</head>
+
+<body style="height: 2000px;">
+    <div id="div1"></div>
+</body>
+
+</html>

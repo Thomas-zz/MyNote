@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas{
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1.准备画布 -->
+    <canvas width="600" height="450"></canvas>
+    <!-- 2.准备绘制工具 -->
+    <!-- 3.利用工具绘图 -->
+    <script>
+        var myCanvan = document.querySelector('canvas')
+        var ctx = myCanvan.getContext('2d')
+
+        // 绘制图片的三种方式
+        // 1.加载图片到内存
+        // var img = document.createElement('img')
+        // img.src = ''
+        var image = new Image()
+        // 必须等图片加载完毕
+        image.onload = function(){
+            // 加载完成
+            console.log(image)
+            ctx.drawImage(image,100,100)
+        }
+        image.src = '../../动画/img/bigtap-mitu-queue-big.png'
+        
+        
+        // 2.
+        // 3.
+
+    </script>
+</body>
+</html>

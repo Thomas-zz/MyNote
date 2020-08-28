@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas{
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1.准备画布 -->
+    <canvas width="600" height="450"></canvas>
+    <!-- 2.准备绘制工具 -->
+    <!-- 3.利用工具绘图 -->
+    <script>
+        var myCanvan = document.querySelector('canvas')
+        var ctx = myCanvan.getContext('2d')
+
+        //蓝色 10px
+        ctx.beginPath()
+        ctx.moveTo(100,100)
+        ctx.lineTo(300,100)
+        ctx.strokeStyle='blue'
+        ctx.lineWidth = 10
+        ctx.lineCap = 'butt'
+        ctx.stroke()
+
+        ctx.beginPath()
+        ctx.moveTo(100,200)
+        ctx.lineTo(300,200)
+        ctx.strokeStyle='red'
+        ctx.lineWidth = 1
+        ctx.lineCap ="round"
+        ctx.setLineDash([2,2,5,2,2])
+        ctx.lineDashOffset = 10
+        ctx.stroke()
+
+        ctx.beginPath()
+        ctx.moveTo(100,300)
+        ctx.lineTo(300,300)
+        ctx.strokeStyle='green'
+        ctx.lineWidth = 30
+        ctx.lineCap ="square"
+        ctx.stroke()
+        
+        // // ctx.beginPath()
+        // ctx.moveTo(100,100)
+        // ctx.lineTo(100,200)
+        // ctx.lineTo(200,200)
+        // ctx.lineTo(100,100)
+        // ctx.closePath()
+
+        // // ctx.strokeStyle = 'blue'
+        // // 起始点和结束点无法完全闭合
+        // // ctx.lineWidth = 10
+        // // ctx.stroke()
+        // // ctx.fill()
+
+        // // ctx.beginPath()
+        // ctx.moveTo(50,0)
+        // ctx.lineTo(300,250)
+        // ctx.lineTo(50,250)
+        // ctx.lineTo(50,0)
+        // ctx.closePath()
+        // // ctx.strokeStyle = 'blue'
+        // // 起始点和结束点无法完全闭合
+        // // ctx.lineWidth = 10
+        // ctx.stroke()
+        // ctx.fill()
+
+    </script>
+</body>
+</html>

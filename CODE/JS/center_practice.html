@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <style>
+        .inlineCenter{
+            background-color: rgb(148, 248, 123);
+            text-align: center;
+        }
+
+        .blockCenter{
+            width: 150px;
+            height: 150px;
+            background-color: rgb(76, 241, 241);
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .moreBlockCenter{
+            text-align: center;
+        }
+
+        .moreBlockCenter .bl{
+            width: 100px;
+            height: 100px;
+            background-color: bisque;
+            display: inline-block;
+        }
+
+        .flexboxCenter{
+            display: flex;
+            justify-content: center;
+        }
+
+        .flexboxCenter .blo{
+            width: 130px;
+            height: 100px;
+            background-color: #5acaf0;
+            margin: 3px;
+        }
+
+        .wuhu{
+            height: 200px;
+            background-color: rgba(221, 84, 72, 0.6);
+            position: relative;
+        }
+
+        .wuhu .qifei{
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background-color: #dd5448;
+            top: 50%;
+            left: 50%;
+            margin: -50px 0 0 -50px;
+        }
+
+        .positionCenter{
+            height: 200px;
+            background-color: rgba(0, 173, 25,0.6);
+            position: relative;
+        }
+
+        .positionCenter div{
+            width: 100px;
+            height: 100px;
+            background-color: rgba(0, 173, 25, 0.9);
+            position: absolute;
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .inline-center{
+            width: 500px;
+            height: 100px;
+            background-color: rgba(255, 215, 103 ,0.6);
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .inline-center span{
+            background-color: rgb(255, 215, 103);
+        }
+
+        .tranformCenter{
+            position: relative;
+            height: 200px;
+            background-color: rgba(134, 95, 197, 0.6);
+        }
+
+        .tranformCenter div{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .flexCenter{
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(254, 49, 93, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="inlineCenter">
+        <span>行内元素水平居中</span>
+    </div>
+
+    <div class="blockCenter">
+        <span>块状元素水平居中</span>
+    </div>
+
+    <div class="moreBlockCenter">
+        <div class="bl">
+            多个块状元素水平居中
+        </div>
+        <div class="bl">
+            多个块状元素水平居中
+        </div>
+        <div class="bl">
+            多个块状元素水平居中
+        </div>
+    </div>
+
+    <div class="flexboxCenter">
+        <div class="blo">
+            flexbox多个块状元素水平居中
+        </div>
+        <div class="blo">
+            flexbox多个块状元素水平居中
+        </div>
+        <div class="blo">
+            flexbox多个块状元素水平居中
+        </div>
+    </div>
+
+    <div class="wuhu">
+        <div class="qifei">
+            绝对定位与负边距实现居中
+        </div>
+    </div>
+
+    <div class="positionCenter">
+        <div>
+            绝对定位与margin实现居中
+        </div>
+    </div>
+
+    <div class="inline-center">
+        <span>未知高度和宽度的inline或inline-block元素水平垂直居中</span>
+    </div>
+
+    <div class="tranformCenter">
+        <div>
+            利用Css3的transform居中
+        </div>
+    </div>
+
+    <div class="flexCenter">
+        <div>flex布局解决元素的水平垂直居中</div>
+    </div>
+</body>
+</html>

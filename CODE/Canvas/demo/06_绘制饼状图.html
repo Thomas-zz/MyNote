@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 100px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas width="600" height="400"></canvas>
+    <script>
+        var myCanvas = document.querySelector('canvas')
+        var ctx = myCanvas.getContext('2d')
+
+        // 1.绘制饼状图
+        // 1.1 根据数据绘制一个饼图
+        // 1.2 绘制标题
+        // 1.3 在画布左上角绘制说明
+
+        var PieChart = function () {
+            this.ctx = ctx || document.querySelector('canvas').getContext('2d')
+
+            this.w = this.ctx.canvas.width
+            this.h = this.ctx.canvas.height
+
+            this.x0 = this.w / 2 + 60
+            this.y0 = this.h / 2
+            this.radius = 150
+            this.outLine = 20
+        }
+        PieChart.prototype.init = function (data) {
+            // 1.准备数据
+            this.drawPie(data)
+        }
+        PieChart.prototype.drawPie = function (data) {
+            var that = this
+            // 2.转化弧度
+            var angleList = this.transformAngle(data)
+            console.log(angleList)
+
+            var startAngle = 0
+            angleList.forEach(function (item, i) {
+                var endAngle = item.angle + startAngle
+                ctx.beginPath()
+                ctx.moveTo(that.x0, that.y0)
+                ctx.arc(that.x0, that.y0, that.radius, startAngle, endAngle)
+                var color = ctx.fillStyle = that.colorStyle()
+                ctx.fill()
+                that.drawTitle(startAngle, item.angle, color, item.title)
+                that.drawDesc(i, item.title)
+                startAngle = endAngle
+            })
+        }
+        PieChart.prototype.drawTitle = function (startAngle, angle, color, title) {
+            var edge = this.radius + this.outLine
+            var edgeX = Math.cos(startAngle + angle / 2) * edge
+            var edgeY = Math.sin(startAngle + angle / 2) * edge
+
+            var outX = this.x0 + edgeX
+            var outY = this.y0 + edgeY
+            this.ctx.beginPath()
+            this.ctx.moveTo(this.x0, this.y0)
+            this.ctx.lineTo(outX, outY)
+            this.ctx.strokeStyle = color
+
+            this.ctx.font = '13px Microsoft YaHei'
+
+            var textWidth = this.ctx.measureText(title).width
+            // 判断线往右还是往左
+            if (outX > this.x0) {
+                // 右
+                this.ctx.lineTo(outX+textWidth,outY)
+                this.ctx.textAlign = 'left'
+            }else{
+                // 左
+                this.ctx.lineTo(outX - textWidth,outY)
+                this.ctx.textAlign = 'right'
+            }
+            this.ctx.stroke()
+            this.ctx.textBaseline = 'bottom'
+            this.ctx.fillText(title,outX,outY)
+
+
+        }
+        PieChart.prototype.drawDesc = function (count, title) {
+            var desX = 15
+            var desY = 20
+            var rectWidth = 25
+            var rectHeight = 18
+            var interval = 5
+
+            desY += count*28
+            this.ctx.beginPath()
+            this.ctx.fillRect(desX,desY,rectWidth,rectHeight)
+
+            this.ctx.textAlign = 'left'
+            this.ctx.fillText(title,desX+rectWidth+interval,desY+rectHeight)
+
+        }
+        PieChart.prototype.transformAngle = function (data) {
+            var total = 0
+            data.forEach(function (item, i) {
+                total += item.num
+            })
+            data.forEach(function (item, i) {
+                var angle = item.num / total * Math.PI * 2
+                item.angle = angle
+            })
+            return data
+        }
+        PieChart.prototype.colorStyle = function () {
+            var r = Math.floor(Math.random() * 256)
+            var g = Math.floor(Math.random() * 256)
+            var b = Math.floor(Math.random() * 256)
+
+            return 'rgb(' + r + ',' + g + ',' + b + ')'
+        }
+
+        var data = [
+            {
+                title: '15-20岁',
+                num: 6
+            },
+            {
+                title: '20-25岁',
+                num: 15
+            },
+            {
+                title: '25-30岁',
+                num: 11
+            },
+            {
+                title: '30-35岁',
+                num: 7
+            },
+            {
+                title: '35岁以上',
+                num: 3
+            }
+        ];
+
+        var pieChart = new PieChart()
+        pieChart.init(data)
+
+    </script>
+</body>
+
+</html>

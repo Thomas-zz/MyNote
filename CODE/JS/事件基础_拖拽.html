@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #div1 {
+            width: 200px;
+            height: 200px;
+            background: red;
+            position: absolute;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var oDiv = document.getElementById('div1')
+            var disX = 0
+            var disY = 0
+
+            oDiv.onmousedown = function (ev) {
+                var oEvent = ev || event
+
+                disX = oEvent.clientX - oDiv.offsetLeft
+                disY = oEvent.clientY - oDiv.offsetTop
+
+                document.onmousemove = function (ev) {
+                    var oEvent = ev || event
+                    var lef=oEvent.clientX - disX
+                    var top = oEvent.clientY - disY
+
+                    if(lef<0){
+                        lef = 0
+                    }
+                    if(lef>document.documentElement.clientWidth-oDiv.offsetWidth){
+                        lef = document.documentElement.clientWidth-oDiv.offsetWidth
+                    }
+                    if(top>document.documentElement.clientHeight-oDiv.offsetHeight){
+                        top = document.documentElement.clientHeight-oDiv.offsetHeight
+                    }
+                    if(top<0){
+                        top = 0
+                    }
+
+                    oDiv.style.left = lef + 'px'
+                    oDiv.style.top = top + 'px'
+                }
+
+                document.onmouseup = function(){
+                    document.onmousemove = null
+                    document.onmouseup = null
+                }
+
+                return false  //解决ie上的拖拽问题和chrome上会选中文字的问题
+            }
+
+
+        }
+
+    </script>
+</head>
+
+<body>
+    asdfasdfadsfg
+    <br>sdfadsg
+    <div id="div1">sfdsfdsfgads</div>
+</body>
+
+</html>

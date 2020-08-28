@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #title {
+            text-align: center;
+            font-size: 50px;
+        }
+
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 30px auto;
+        }
+
+        #startGame {
+            display: block;
+            margin: 30px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="title">
+        <span>贪吃蛇</span>
+    </div>
+    <input type="button" id="startGame" onclick="startGame();" value="开始游戏">
+    <canvas width="300" height="430"></canvas>
+    <script>
+        var myCanvas = document.querySelector('canvas')
+        var ctx = myCanvas.getContext('2d')
+
+        var GreedySnake = function () {
+            this.ctx = ctx || document.querySelector('canvas').getContext('2d')
+            this.gridSize = 10
+            //设置canvas可视区x轴上格子数量和y轴上格子数量
+            this.wGrid = this.ctx.canvas.width / this.gridSize
+            this.hGrid = this.ctx.canvas.height / this.gridSize
+            this.point = { x: -1, y: -1 }  //设置食物节点
+
+            // 设置贪吃蛇初始数据
+            this.startX = 10
+            this.startY = 5
+            // 设置可转方向
+            this.direction = ['left', 'right', 'up', 'down']
+            // 初始运动方向
+            this.initDirection = 'right'
+            // 初始蛇身长度
+            this.snake = [{ x: this.startX, y: this.startY }, { x: this.startX - 1, y: this.startY }, { x: this.startX - 2, y: this.startY }]
+
+        }
+        // 添加初始化方法
+        GreedySnake.prototype.init = function () {
+            // this.setSnake()
+        }
+        // // 贪吃蛇运动方法
+        // GreedySnake.prototype.setSnake = function () {
+
+        //     this.addSnake()
+        //     // console.log(snake)
+        //     this.turnSnakeHead()
+        // }
+        // 添加身体
+        GreedySnake.prototype.addSnake = function () {
+            //获取最后两格身体
+            var lastBody = this.snake[this.snake.length - 1]
+            var secLastBody = this.snake[this.snake.length - 2]
+            // console.log(secLastBody)
+            // 通过最后两格身体可确定新加身体的方向
+            var bodyX = lastBody.x - secLastBody.x
+            var bodyY = lastBody.y - secLastBody.y
+            // 创建两格新身体并加入到蛇身当中
+            var newBody1 = { x: bodyX + lastBody.x, y: bodyY + lastBody.y }
+            var newBody2 = { x: bodyX * 2 + lastBody.x, y: bodyY * 2 + lastBody.y }
+            var newBody3 = { x: bodyX * 3 + lastBody.x, y: bodyY * 3 + lastBody.y }
+            this.snake.push(newBody1)
+            this.snake.push(newBody2)
+            this.snake.push(newBody3)
+
+            // console.log(this.snake)
+        }
+        // 改变蛇头方向
+        GreedySnake.prototype.turnSnakeHead = function (direction) {
+            if (direction == 'up') this.turnSnakeUp()
+            if (direction == 'down') this.turnSnakeDown()
+            if (direction == 'left') this.turnSnakeLeft()
+            if (direction == 'right') this.turnSnakeRight()
+        }
+        // 蛇头向左
+        GreedySnake.prototype.turnSnakeLeft = function () {
+            var head = this.snake[0]
+            this.snake[0] = { x: head.x - 1, y: head.y }
+            this.turnSnake(head)
+        }
+        // 蛇头向右
+        GreedySnake.prototype.turnSnakeRight = function () {
+            var head = this.snake[0]
+            this.snake[0] = { x: head.x + 1, y: head.y }
+            this.turnSnake(head)
+        }
+        // 蛇头向上
+        GreedySnake.prototype.turnSnakeUp = function () {
+            var head = this.snake[0]
+            this.snake[0] = { x: head.x, y: head.y - 1 }
+            this.turnSnake(head)
+        }
+        // 蛇头向下
+        GreedySnake.prototype.turnSnakeDown = function () {
+            var head = this.snake[0]
+            this.snake[0] = { x: head.x, y: head.y + 1 }
+            this.turnSnake(head)
+        }
+        // 挪动蛇身
+        GreedySnake.prototype.turnSnake = function (head) {
+            var body
+            //从第二个身体节点开始依次挪动
+            for (var i = 1; i < this.snake.length; i++) {
+                body = this.snake[i]
+                this.snake[i] = head
+                head = body
+            }
+        }
+        //修改运动方向
+        GreedySnake.prototype.changeDirection = function (direction) {
+            //如果修改方向等于现在运动的方向，则不修改
+            if (direction == this.initDirection) {
+                return;
+            }
+            if (direction == 'left' && this.initDirection == 'right') {
+                return false
+            } else if (direction == 'right' && this.initDirection == 'left') {
+                return false
+            } else if (direction == 'up' && this.initDirection == 'down') {
+                return false
+            } else if (direction == 'down' && this.initDirection == 'up') {
+                return false
+            } else {
+                this.initDirection = direction
+            }
+        }
+        //判断是否撞墙
+        GreedySnake.prototype.ifHitWall = function () {
+            var head = this.snake[0]
+            //是否撞到左墙或上墙
+            if (head.x < 0 || head.y < 0) {
+                return true
+            }
+            //是否撞到右墙或下墙
+            if (head.x > this.wGrid - 1 || head.y > this.hGrid - 1) {
+                return true
+            }
+            return false
+        }
+        //判断是否撞到自己
+        GreedySnake.prototype.ifHitBody = function () {
+            var head = this.snake[0]
+            for (var i = 1; i < this.snake.length; i++) {
+                if (head.x == this.snake[i].x && head.y == this.snake[i].y) {
+                    return true
+                }
+            }
+            return false
+        }
+        //判断是否吃到东西
+        GreedySnake.prototype.eatFood = function () {
+            var head = this.snake[0]
+            if (this.point.x == -1) {   //初始化第一个食物节点
+                this.getPoint()
+                this.drawPoint()
+            }
+            if (head.x == this.point.x && head.y == this.point.y) {
+                this.addSnake()  //添加蛇身
+                this.getPoint()  // 设置食物节点
+                this.drawPoint()  //  画一个节点
+            }
+        }
+        // 生成食物节点
+        GreedySnake.prototype.getPoint = function () {
+            this.point.x = Math.floor(Math.random(0, this.wGrid) * this.wGrid)
+            this.point.y = Math.floor(Math.random(0, this.hGrid) * this.hGrid)
+            // console.log(this.point.x, this.point.y)
+        }
+        //画出食物节点
+        GreedySnake.prototype.drawPoint = function () {
+            this.ctx.fillRect(this.point.x * this.gridSize, this.point.y * this.gridSize, this.gridSize, this.gridSize)
+
+            console.log(this.point.x, this.point.y)
+
+        }
+        //画出蛇
+        GreedySnake.prototype.drawSnake = function () {
+            for (var i = 0; i < this.snake.length; i++) {
+                this.ctx.fillRect(this.snake[i].x * this.gridSize, this.snake[i].y * this.gridSize, this.gridSize, this.gridSize)
+            }
+        }
+        // 清屏
+        GreedySnake.prototype.clear = function () {
+            this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
+        }
+
+        function startGame() {
+            clearInterval(window.looper)
+            var greedySnake = new GreedySnake()
+            greedySnake.init()
+
+            // greedySnake.getPoint()
+            // greedySnake.drawPoint()
+            // 开始循环
+            console.log(greedySnake.initDirection)
+            window.looper = setInterval(function () {
+                //判断是否撞墙或撞到自己
+                if (greedySnake.ifHitBody() || greedySnake.ifHitWall()) {
+                    clearInterval(window.looper)
+                    alert('游戏结束')
+                } else {
+                    greedySnake.turnSnakeHead(greedySnake.initDirection)  //设置方向
+                    greedySnake.clear()  //清屏
+                    ctx.beginPath()  //开始绘制
+                    greedySnake.eatFood()  //处理食物节点
+                    greedySnake.drawPoint()  //每次都会清屏，所以每次都要画点
+                    greedySnake.drawSnake()  //画蛇
+                }
+
+            }, 70)
+
+            window.onkeydown = function (key) {
+                var direction = ''
+                // alert(key.keyCode)
+                switch (key.keyCode) {
+                    case 37:
+                        greedySnake.changeDirection('left')
+                        break
+                    case 39:
+                        greedySnake.changeDirection('right')
+                        break
+                    case 38:
+                        greedySnake.changeDirection('up')
+                        break
+                    case 40:
+                        greedySnake.changeDirection('down')
+                        break
+                }
+                if (direction == '') return;
+                //改变蛇行进方向
+                greedySnake.changeDirection(direction)
+            }
+
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>

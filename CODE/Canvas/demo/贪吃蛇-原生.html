@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="贪吃蛇.css">
+</head>
+<body>
+        <div id="score">
+            分数:0
+        </div>
+        <div id="historyhigest">
+            历史最高分数:0
+        </div>
+        <div id="map">
+            <div id="menuframe">
+                    <div id="menu">
+                        <div id="menu_top">
+                            <span>Good Luck!</span>
+                            <a href="javascript:" id="begin">开始游戏</a>
+                        </div>
+                        <div id="menu_bottom">
+                            <span>Gameover!</span>
+                            <a href="javascript:">重新开始</a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <script>
+            function getStyle(obj,name)
+{
+    if(obj.currentStyle)
+    {
+        return obj.currentStyle[name];
+    }
+    else
+    {
+        return getComputedStyle(obj,false)[name];
+    }
+}
+
+function startMove(obj, json, fnEnd)
+{
+    clearInterval(obj.timer);
+    obj.timer=setInterval(function(){
+        var bStop=true;//假设所有json里的值都完成运动了
+
+         for(var attr in json)
+        {
+            var cur=0;
+            
+            if(attr=='opacity')
+            {
+                cur=Math.round(parseFloat(getStyle(obj,attr))*100);
+            }
+            else
+            {
+                cur=parseInt(getStyle(obj,attr));
+            }
+
+            var speed=(json[attr]-cur)/10;
+            speed=speed>0?Math.ceil(speed):Math.floor(speed);
+
+            if(cur!=json[attr]) bStop=false;
+
+            if(attr=='opacity')
+                {
+                    obj.style.filter='alpha(opacity:'+(cur+speed)+')';
+                    obj.style.opacity=(cur+speed)/100;
+                }
+                else{
+                obj.style[attr]=cur+speed+'px';
+                }
+        }
+
+        if(bStop)
+        {
+            clearInterval(obj.timer);
+
+            if(fnEnd) fnEnd();
+        }
+    },10);
+}
+
+        var oMap=document.getElementById('map');
+        var oMenu=document.getElementById('menu');
+        var aMenuopre=oMenu.getElementsByTagName('div');
+        var oReload=aMenuopre[1].getElementsByTagName('a')[0];
+        var oBegin=document.getElementById('begin');
+        var oHeigest=document.getElementById('historyhigest');
+        var oScore=document.getElementById('score');
+        var nowhigest=getCookie('higestscore');
+        var timer;
+          
+        startMove(oMenu,{top: 0});
+
+        var snake =new Snake();
+        higest();
+        snake.begin();
+        oReload.onclick=function()
+        {
+            location.reload();
+        }
+        oBegin.onclick=function()
+        {
+            clearInterval(timer);
+            startMove(oMenu,{top:-150});
+            timer = setInterval("snake.run()", 100);
+        }
+
+
+        
+
+    function Snake()
+    {
+
+        this.width=20;
+        this.height=20;
+        this.direction='right';
+
+        this.body=[
+            {x: 2, y:0},
+            {x: 1, y:0},
+            {x: 0, y:0}
+        ];
+        
+        this.display=function()
+        {
+            for(var i=0;i<this.body.length;i++)
+            {
+                if(this.body[i].x!=null)
+                {
+                    var s=document.createElement('div');
+
+                    this.body[i].flag=s;
+                    s.style.width=this.width+'px';
+                    s.style.height=this.height+'px';
+                    s.style.borderRadius="50%";
+                    s.style.position = 'absolute';
+                    if(0==i) {s.style.background="red";}
+                    else {s.style.background="gray";}
+                    s.style.left=this.body[i].x*this.width+'px';
+                    s.style.top=this.body[i].y*this.height+'px';
+                    oMap.appendChild(s);
+                }
+                this.body[0].background="red";
+            }
+        }
+
+        this.run=function()
+        {  
+            oScore.innerHTML="分数："+parseInt(this.body.length-3);
+
+            for (var i=this.body.length-1; i>0; i--) { 
+                this.body[i].x = this.body[i-1].x;
+                this.body[i].y = this.body[i-1].y;
+            }
+
+            switch(this.direction)
+                {
+                    case "left":
+                        this.body[0].x -= 1;
+                        break;
+                    case "right":
+                        this.body[0].x += 1;
+                        break;
+                    case "up":
+                        this.body[0].y -= 1;
+                        break;
+                    case "down":
+                        this.body[0].y += 1;
+                        break;
+                }
+            //出界
+           if (this.body[0].x < 0 || this.body[0].x > 49 || this.body[0].y < 0 || this.body[0].y > 34)
+            {
+                //alert('out');
+                clearInterval(timer);
+                startMove(oMenu,{top: -300});
+            }
+            //吃到食物
+            if (this.body[0].x == food.x && this.body[0].y == food.y) {
+                //alert('food');
+                this.body.push({x:null, y:null, flag: null});
+                oMap.removeChild(food.flag);
+                food.display();
+                higest();
+            }
+            //撞到自己
+            for (var i=2; i<this.body.length; i++) {
+                if (this.body[0].x == this.body[i].x && this.body[0].y == this.body[i].y) {
+                    //alert('eat');
+                    clearInterval(timer);
+                    startMove(oMenu,{top: -300});
+                }
+            }
+
+            for (var i=0; i<this.body.length; i++) {
+                if (this.body[i].flag != null) { 
+                    oMap.removeChild(this.body[i].flag);
+                }
+            }
+            this.display();
+        }
+
+        
+        document.body.onkeydown = function(e) {
+            var ev = e || window.event;
+
+            switch(ev.keyCode)
+            {
+                case 38:
+                    if (snake.direction != 'down') 
+                    {  
+                        snake.direction = "up";
+                    }
+                    break;
+                case 40:
+                    if (snake.direction != "up") 
+                    {
+                        snake.direction = "down";
+                    }
+                    break;
+                case 37:
+                    if (snake.direction != "right") 
+                    {
+                        snake.direction = "left";
+                    }
+                    break;
+                case 39:
+                    if (snake.direction != "left") 
+                    {
+                        snake.direction = "right";
+                    }
+                    break;
+            }
+         }
+        
+
+         var food = new Food();
+
+         this.begin=function()
+         {
+            snake.display();
+            food.display();
+         }
+
+
+        function Food()
+                {
+                    this.width = 20;
+                    this.height = 20;
+                    this.display = function() {
+                        var f = document.createElement('div');
+                        this.flag = f;
+                        f.style.width = this.width + 'px';
+                        f.style.height = this.height + 'px';
+                        f.style.background = 'green';
+                        f.style.borderRadius = '50%';
+                        f.style.position = 'absolute';
+                        this.x = Math.floor(Math.random()*50);
+                        this.y = Math.floor(Math.random()*35);
+                        for(var i=0;i<snake.body.length;i++)
+                        {
+                          if(snake.body[i].x==this.x&&snake.body[i].y==this.y)
+                          {
+                            this.x = Math.floor(Math.random()*50);
+                            this.y = Math.floor(Math.random()*35);
+                            i=0;
+                          }
+                        }
+                        f.style.left = this.x * this.width + 'px';
+                        f.style.top = this.y * this.height + 'px';
+                        oMap.appendChild(f);
+                    }
+                }
+     }
+                                  
+
+                    function higest()
+                    {
+                            nowhigest=getCookie('higestscore');
+
+                            if(parseInt(snake.body.length-3)>parseInt(nowhigest))
+                            {
+                                removeCookie('higestscore');
+                                setCookie('higestscore',parseInt(snake.body.length-3),30);
+                                oHeigest.innerHTML='历史最高分数:'+getCookie('higestscore');
+                            }
+                            else if(nowhigest=='')
+                            {
+                                setCookie('higestscore',0,30);
+                                oHeigest.innerHTML='历史最高分数:'+getCookie('higestscore');
+                            }
+                            else{
+                                oHeigest.innerHTML='历史最高分数:'+getCookie('higestscore');
+                            }
+                    }
+
+                    function setCookie(name, value, iDay)
+                    {
+                        var oDate=new Date();
+                        oDate.setDate(oDate.getDate()+iDay);
+                        
+                        document.cookie=name+'='+value+';expires='+oDate;
+                    }
+
+                    function getCookie(name)
+                    {
+                        var arr=document.cookie.split('; ');
+                        
+                        for(var i=0;i<arr.length;i++)
+                        {
+                            var arr2=arr[i].split('=');
+                            
+                            if(arr2[0]==name)
+                            {
+                                return arr2[1];
+                            }
+                        }
+                        
+                        return '';
+                    }
+
+                    function removeCookie(name)
+                    {
+                        setCookie(name, 1, -1);
+                    }
+        </script>
+</body>

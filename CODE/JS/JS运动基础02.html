@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <style>
+        #div1 {
+            width: 200px;
+            height: 400px;
+            background-color: red;
+            position: absolute;
+            left: -200px;
+        }
+
+        #div1 span {
+            width: 40px;
+            height: 100px;
+            background: green;
+            position: absolute;
+            line-height: 40px;
+            top: 150px;
+            left: 200px;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var oDiv1 = document.getElementById('div1');
+
+            oDiv1.onmouseover=function(){
+                startMove(0);
+            }
+            oDiv1.onmouseout=function(){
+                startMove(-200);
+            }
+        }
+
+        var timer = null;
+
+        function startMove(iTarget) {
+            var oDiv1 = document.getElementById('div1');
+
+            clearInterval(timer);
+            timer = setInterval(function () {
+                var speed = 0;
+
+                if (oDiv1.offsetLeft > iTarget) {
+                    speed = -10;
+                } else {
+                    speed = 10;
+                }
+
+                if (oDiv1.offsetLeft == iTarget) {
+                    clearInterval(timer);
+                } else {
+                    oDiv1.style.left=oDiv1.offsetLeft+speed+'px';
+                }
+
+            },30);
+        }
+
+
+    </script>
+</head>
+
+<body>
+    <div id="div1">
+        <span>分享到</span>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./fontawesome/css/all.css">
+    <style>
+        .nav{
+            width: 1205px;
+            height: 48px;
+            background-color: #e8e7e3;
+            margin: 100px auto;
+        }
+
+        .nav-list{
+            line-height: 48px;
+            float: left;
+        }
+
+        .nav a{
+            padding: 0 39px;
+            display: block;
+            text-decoration: none;
+            color: #777777;
+            font-size: 18px;
+        }
+        .nav a:hover{
+            background-color: #3f3f3f;
+            color: #d7d6d2;
+        }
+
+        .clearfix::before,
+        .clearfix::after{
+            content:'';
+            display:table;
+            clear:both;
+
+        }
+
+        .top-bar-wrapper{
+            width: 100%;;
+            background-color: #E3E4E5;
+            line-height: 30px;
+            border-bottom: 1px #ddd solid;
+            font-size: 14px;
+        }
+
+        .top-bar a:hover{
+            color: #f10125;
+        }
+
+        .top-bar{
+            width: 1190px;
+            margin: 0 auto;
+        }
+
+        .top-bar a,
+        .top-bar span,
+        .top-bar i{
+            color:#999;
+            text-decoration: none;
+        }
+
+
+        .location i{
+            color: red;
+        }
+
+        .location{
+            float: left;
+        }
+
+        .shortcut{
+            float: right;
+        }
+
+        .shortcut li{
+            float: left;
+        }
+
+        .shortcut .line{
+            width: 1px;
+            height: 10px;
+            background-color: #999;
+            margin: 10px 12px;
+        }
+
+    </style>
+</head>
+<body>
+    <ul class="nav">
+        <li class="nav-list">
+            <a href="javascript:;">HTML/CSS</a>
+        </li>
+        <li class="nav-list">
+            <a href="javascript:;">Browser Side</a>
+        </li>
+        <li class="nav-list">
+            <a href="javascript:;">Server Side</a>
+        </li>
+        <li class="nav-list">
+            <a href="javascript:;">Programming</a>
+        </li>
+        <li class="nav-list">
+            <a href="javascript:;">XML</a>
+        </li>
+        <li class="nav-list">
+            <a href="javascript:;">Web Building</a>
+        </li>
+        <li class="nav-list">
+            <a href="javascript:;">Reference</a>
+        </li>
+    </ul>
+
+    <div class="top-bar-wrapper">
+        <div class="top-bar clearfix">
+            <div class="location">
+                <i class="fas fa-map-marker-alt"></i>
+                <a href="javascript:;">北京</a>
+            </div>
+            <ul class="shortcut">
+                <li>
+                    <a href="javascript:;">你好，请登录</a>
+                    <a href="javascript:;">免费注册</a>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <a href="javascript:;">我的订单</a>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <a href="javascript:;">我的京东</a>
+                    <i class="fas fa-angle-down"></i>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <a href="javascript:;">京东会员</a>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <a href="javascript:;">企业采购</a>
+                    <i class="fas fa-angle-down"></i>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <span>客户服务</span>
+                    <i class="fas fa-angle-down"></i>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <span>网站导航</span>
+                    <i class="fas fa-angle-down"></i>
+                </li>
+                <li class="line"></li>
+                <li>
+                    <span>手机京东</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
